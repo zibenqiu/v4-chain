@@ -1276,6 +1276,18 @@ fetch(`${baseURL}/fills/parentSubaccount?address=string&parentSubaccountNumber=0
 |parentSubaccountNumber|query|number(double)|true|none|
 |limit|query|number(double)|false|none|
 |page|query|number(double)|false|none|
+|fillType|query|[FillType](#schemafilltype)|false|none|
+
+#### Enumerated Values
+
+|Parameter|Value|
+|---|---|
+|fillType|LIMIT|
+|fillType|LIQUIDATED|
+|fillType|LIQUIDATION|
+|fillType|DELEVERAGED|
+|fillType|OFFSETTING|
+|fillType|TWAP_SUBORDER|
 
 > Example responses
 
@@ -2205,6 +2217,8 @@ fetch(`${baseURL}/orders?address=string&subaccountNumber=0.1`,
 |type|TRAILING_STOP|
 |type|TAKE_PROFIT|
 |type|TAKE_PROFIT_MARKET|
+|type|TWAP|
+|type|TWAP_SUBORDER|
 
 > Example responses
 
@@ -2311,6 +2325,8 @@ Status Code **200**
 |type|TRAILING_STOP|
 |type|TAKE_PROFIT|
 |type|TAKE_PROFIT_MARKET|
+|type|TWAP|
+|type|TWAP_SUBORDER|
 |timeInForce|GTT|
 |timeInForce|FOK|
 |timeInForce|IOC|
@@ -2319,6 +2335,7 @@ Status Code **200**
 |*anonymous*|CANCELED|
 |*anonymous*|BEST_EFFORT_CANCELED|
 |*anonymous*|UNTRIGGERED|
+|*anonymous*|ERROR|
 |*anonymous*|BEST_EFFORT_OPENED|
 
 <aside class="success">
@@ -2405,6 +2422,8 @@ fetch(`${baseURL}/orders/parentSubaccountNumber?address=string&parentSubaccountN
 |type|TRAILING_STOP|
 |type|TAKE_PROFIT|
 |type|TAKE_PROFIT_MARKET|
+|type|TWAP|
+|type|TWAP_SUBORDER|
 
 > Example responses
 
@@ -2511,6 +2530,8 @@ Status Code **200**
 |type|TRAILING_STOP|
 |type|TAKE_PROFIT|
 |type|TAKE_PROFIT_MARKET|
+|type|TWAP|
+|type|TWAP_SUBORDER|
 |timeInForce|GTT|
 |timeInForce|FOK|
 |timeInForce|IOC|
@@ -2519,6 +2540,7 @@ Status Code **200**
 |*anonymous*|CANCELED|
 |*anonymous*|BEST_EFFORT_CANCELED|
 |*anonymous*|UNTRIGGERED|
+|*anonymous*|ERROR|
 |*anonymous*|BEST_EFFORT_OPENED|
 
 <aside class="success">
@@ -4848,6 +4870,7 @@ This operation does not require authentication
 |*anonymous*|LIQUIDATION|
 |*anonymous*|DELEVERAGED|
 |*anonymous*|OFFSETTING|
+|*anonymous*|TWAP_SUBORDER|
 
 ## MarketType
 
@@ -5437,6 +5460,7 @@ This operation does not require authentication
 |*anonymous*|CANCELED|
 |*anonymous*|BEST_EFFORT_CANCELED|
 |*anonymous*|UNTRIGGERED|
+|*anonymous*|ERROR|
 
 ## BestEffortOpenedStatus
 
@@ -5517,6 +5541,8 @@ or
 |*anonymous*|TRAILING_STOP|
 |*anonymous*|TAKE_PROFIT|
 |*anonymous*|TAKE_PROFIT_MARKET|
+|*anonymous*|TWAP|
+|*anonymous*|TWAP_SUBORDER|
 
 ## OrderResponseObject
 
