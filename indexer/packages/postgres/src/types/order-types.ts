@@ -68,6 +68,9 @@ export interface OrderCreateObject {
   triggerPrice?: string,
   builderAddress?: string,
   feePpm?: string,
+  duration?: string | null, // TODO: anmol - dont use null?
+  interval?: string | null,
+  priceTolerance?: string | null,
 }
 
 export interface OrderUpdateObject {
@@ -88,6 +91,9 @@ export interface OrderUpdateObject {
   goodTilBlockTime?: string | null,
   clientMetadata?: string,
   triggerPrice?: string,
+  duration?: string | null,
+  interval?: string | null,
+  priceTolerance?: string | null,
 }
 
 export enum OrderColumns {
