@@ -1093,6 +1093,15 @@
           "feePpm": {
             "type": "string"
           },
+          "duration": {
+            "type": "string"
+          },
+          "interval": {
+            "type": "string"
+          },
+          "priceTolerance": {
+            "type": "string"
+          },
           "timeInForce": {
             "$ref": "#/components/schemas/APITimeInForce"
           },

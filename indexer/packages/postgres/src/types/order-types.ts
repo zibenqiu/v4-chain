@@ -68,9 +68,9 @@ export interface OrderCreateObject {
   triggerPrice?: string,
   builderAddress?: string,
   feePpm?: string,
-  duration?: string | null, // TODO: anmol - dont use null?
-  interval?: string | null,
-  priceTolerance?: string | null,
+  duration?: string,
+  interval?: string,
+  priceTolerance?: string,
 }
 
 export interface OrderUpdateObject {

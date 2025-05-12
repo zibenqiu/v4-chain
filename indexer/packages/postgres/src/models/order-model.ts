@@ -98,6 +98,9 @@ export default class OrderModel extends BaseModel {
         updatedAtHeight: { type: 'string', pattern: IntegerPattern },
         builderAddress: { type: ['string', 'null'], default: null },
         feePpm: { type: ['string', 'null'], default: null },
+        duration: { type: ['string', 'null'], default: null, pattern: NonNegativeNumericPattern },
+        interval: { type: ['string', 'null'], default: null, pattern: NonNegativeNumericPattern },
+        priceTolerance: { type: ['string', 'null'], default: null, pattern: NonNegativeNumericPattern },
       },
     };
   }

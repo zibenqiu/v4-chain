@@ -130,9 +130,9 @@ func OrderTwapParametersToIndexerOrderTwapParameters(
 		return nil
 	}
 	return &v1types.TwapParameters{
-		Duration:        orderTwapParameters.Duration,
-		Interval:        orderTwapParameters.Interval,
-		PriceTolerance:  orderTwapParameters.PriceTolerance,
+		Duration:       orderTwapParameters.Duration,
+		Interval:       orderTwapParameters.Interval,
+		PriceTolerance: orderTwapParameters.PriceTolerance,
 	}
 }
 
