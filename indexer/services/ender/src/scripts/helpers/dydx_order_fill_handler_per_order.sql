@@ -142,6 +142,20 @@ BEGIN
         order_record."totalFilled" = fill_amount;
         order_record."status" = dydx_get_order_status(fill_amount, order_size, order_canceled_status, order_record."orderFlags", order_record."timeInForce");
         order_record."createdAtHeight" = block_height;
+        
+        -- Set TWAP fields based on order type
+        IF (order_->'orderId'->'orderFlags')::bigint = 256 THEN
+            -- This is a TWAP order, set the TWAP parameters
+            order_record."duration" = (order_->'twapParameters'->'duration')::bigint;
+            order_record."interval" = (order_->'twapParameters'->'interval')::bigint;
+            order_record."priceTolerance" = (order_->'twapParameters'->'priceTolerance')::bigint;
+        ELSE
+            -- Not a TWAP order, set to NULL
+            order_record."duration" = NULL;
+            order_record."interval" = NULL;
+            order_record."priceTolerance" = NULL;
+        END IF;
+        
         INSERT INTO orders
             ("id", "subaccountId", "clientId", "clobPairId", "side", "size", "totalFilled", "price", "type",
             "status", "timeInForce", "reduceOnly", "orderFlags", "goodTilBlock", "goodTilBlockTime", "createdAtHeight",

@@ -63,6 +63,9 @@ BEGIN
                                                               power(10, perpetual_market_record."quantumConversionExponent" +
                                                                         QUOTE_CURRENCY_ATOMIC_RESOLUTION -
                                                                         perpetual_market_record."atomicResolution")::numeric);
+                order_record."duration" = NULL;
+                order_record."interval" = NULL;
+                order_record."priceTolerance" = NULL;
             WHEN event_data->'twapOrderPlacement' IS NOT NULL THEN
                 order_record."status" = 'OPEN';
                 order_record."duration" = (order_->'twapParameters'->'duration')::bigint;
@@ -70,6 +73,9 @@ BEGIN
                 order_record."priceTolerance" = (order_->'twapParameters'->'priceTolerance')::bigint;
             ELSE
                 order_record."status" = 'OPEN';
+                order_record."duration" = NULL;
+                order_record."interval" = NULL;
+                order_record."priceTolerance" = NULL;
         END CASE;
 
         CASE
