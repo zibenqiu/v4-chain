@@ -2,9 +2,9 @@ import * as Knex from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.alterTable('orders', (table) => {
-    table.integer('duration').nullable();
-    table.integer('interval').nullable();
-    table.integer('priceTolerance').nullable();
+    table.string('duration').nullable();
+    table.string('interval').nullable();
+    table.string('priceTolerance').nullable();
   });
 }
 

@@ -6006,6 +6006,7 @@ or
 |*anonymous*|LIMIT|
 |*anonymous*|LIQUIDATED|
 |*anonymous*|DELEVERAGED|
+|*anonymous*|TWAP_SUBORDER|
 
 ## TradeResponseObject
 

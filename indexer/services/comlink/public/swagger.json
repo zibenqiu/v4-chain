@@ -1366,7 +1366,8 @@
         "enum": [
           "LIMIT",
           "LIQUIDATED",
-          "DELEVERAGED"
+          "DELEVERAGED",
+          "TWAP_SUBORDER"
         ],
         "type": "string"
       },

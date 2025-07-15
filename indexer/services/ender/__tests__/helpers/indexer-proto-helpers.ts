@@ -410,6 +410,9 @@ export function createOrder({
   clientMetadata,
   builderAddress,
   feePpm,
+  duration,
+  interval,
+  priceTolerance,
 }: {
   subaccountId: IndexerSubaccountId,
   clientId: number,
@@ -424,6 +427,9 @@ export function createOrder({
   clientMetadata: number,
   builderAddress?: string,
   feePpm?: number,
+  duration?: number,
+  interval?: number,
+  priceTolerance?: number,
 }): IndexerOrder {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   let orderJSON: any = {
@@ -447,6 +453,17 @@ export function createOrder({
       builderCodeParams: {
         builderAddress,
         feePpm,
+      },
+    };
+  }
+
+  if (duration !== undefined && interval !== undefined && priceTolerance !== undefined) {
+    orderJSON = {
+      ...orderJSON,
+      twapParameters: {
+        duration,
+        interval,
+        priceTolerance,
       },
     };
   }
@@ -641,6 +658,9 @@ export async function expectOrderInDatabase({
   updatedAtHeight,
   builderAddress,
   feePpm,
+  duration,
+  interval,
+  priceTolerance,
 }: {
   subaccountId: string,
   clientId: string,
@@ -660,6 +680,9 @@ export async function expectOrderInDatabase({
   updatedAtHeight: string,
   builderAddress?: string,
   feePpm?: number,
+  duration?: number,
+  interval?: number,
+  priceTolerance?: number,
 }): Promise<void> {
   const orderId: string = OrderTable.uuid(subaccountId, clientId, clobPairId, orderFlags);
   const orderFromDatabase: OrderFromDatabase | undefined = await
@@ -686,6 +709,9 @@ export async function expectOrderInDatabase({
     updatedAtHeight,
     builderAddress: builderAddress ?? null,
     feePpm: feePpm ?? null,
+    duration: duration ?? null,
+    interval: interval ?? null,
+    priceTolerance: priceTolerance ?? null,
   }));
 }
 

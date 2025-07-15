@@ -68,9 +68,9 @@ BEGIN
                 order_record."priceTolerance" = NULL;
             WHEN event_data->'twapOrderPlacement' IS NOT NULL THEN
                 order_record."status" = 'OPEN';
-                order_record."duration" = (order_->'twapParameters'->'duration')::bigint;
-                order_record."interval" = (order_->'twapParameters'->'interval')::bigint;
-                order_record."priceTolerance" = (order_->'twapParameters'->'priceTolerance')::bigint;
+                order_record."duration" = (order_->'twapParameters'->'duration');
+                order_record."interval" = (order_->'twapParameters'->'interval');
+                order_record."priceTolerance" = (order_->'twapParameters'->'priceTolerance');
             ELSE
                 order_record."status" = 'OPEN';
                 order_record."duration" = NULL;
