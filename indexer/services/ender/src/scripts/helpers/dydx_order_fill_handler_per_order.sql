@@ -110,27 +110,42 @@ BEGIN
     order_record."updatedAtHeight" = block_height;
 
     IF FOUND THEN
-        order_record."totalFilled" = total_filled;
         order_record."status" = dydx_get_order_status(total_filled, order_record.size, order_canceled_status, order_record."orderFlags", order_record."timeInForce");
 
-        UPDATE orders
-        SET
-            "side" = order_record."side",
-            "size" = order_record."size",
-            "totalFilled" = order_record."totalFilled",
-            "price" = order_record."price",
-            "status" = order_record."status",
-            "orderFlags" = order_record."orderFlags",
-            "goodTilBlock" = order_record."goodTilBlock",
-            "goodTilBlockTime" = order_record."goodTilBlockTime",
-            "timeInForce" = order_record."timeInForce",
-            "reduceOnly" = order_record."reduceOnly",
-            "clientMetadata" = order_record."clientMetadata",
-            "updatedAt" = order_record."updatedAt",
-            "updatedAtHeight" = order_record."updatedAtHeight",
-            "builderAddress" = order_record."builderAddress",
-            "feePpm" = order_record."feePpm"
-        WHERE id = order_uuid;
+        IF order_record."orderFlags" = 256 THEN
+            -- Twap suborders shouldn't update all the fields. For example, order flags should remain 128 (not updated to 256).
+            UPDATE orders
+            SET
+                "side" = order_record."side",
+                "totalFilled" = order_record."totalFilled",
+                "status" = order_record."status",
+                "reduceOnly" = order_record."reduceOnly",
+                "updatedAt" = order_record."updatedAt",
+                "updatedAtHeight" = order_record."updatedAtHeight",
+                "totalFilled" = order_record."totalFilled" + fill_amount -- keep track of fill amount for the parent order
+            WHERE id = order_uuid;
+        ELSE
+            UPDATE orders
+            SET
+                "side" = order_record."side",
+                "size" = order_record."size",
+                "totalFilled" = total_filled;
+                "price" = order_record."price",
+                "status" = order_record."status",
+                "orderFlags" = order_record."orderFlags",
+                "goodTilBlock" = order_record."goodTilBlock",
+                "goodTilBlockTime" = order_record."goodTilBlockTime",
+                "timeInForce" = order_record."timeInForce",
+                "reduceOnly" = order_record."reduceOnly",
+                "clientMetadata" = order_record."clientMetadata",
+                "updatedAt" = order_record."updatedAt",
+                "updatedAtHeight" = order_record."updatedAtHeight",
+                "builderAddress" = order_record."builderAddress",
+                "feePpm" = order_record."feePpm"
+            WHERE id = order_uuid;
+        END IF;
+
+        
     ELSE
         order_record."id" = order_uuid;
         order_record."subaccountId" = subaccount_uuid;

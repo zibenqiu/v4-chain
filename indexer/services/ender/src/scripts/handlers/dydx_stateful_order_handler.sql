@@ -21,10 +21,18 @@ DECLARE
     perpetual_market_record perpetual_markets%ROWTYPE;
     order_record orders%ROWTYPE;
     subaccount_record subaccounts%ROWTYPE;
+    order_flag bigint;
 BEGIN
     /** TODO(IND-334): Remove after deprecating StatefulOrderPlacementEvent. */
     IF event_data->'orderPlace' IS NOT NULL OR event_data->'longTermOrderPlacement' IS NOT NULL OR event_data->'conditionalOrderPlacement' IS NOT NULL OR event_data->'twapOrderPlacement' IS NOT NULL THEN
         order_ = coalesce(event_data->'orderPlace'->'order', event_data->'longTermOrderPlacement'->'order', event_data->'conditionalOrderPlacement'->'order', event_data->'twapOrderPlacement'->'order');
+        order_flag = (order_->'orderId'->'orderFlags')::bigint;
+
+        IF order_flag = 256 THEN
+            -- Twap suborders are not stored in the orders table.
+            RETURN NULL;
+        END IF;
+
         clob_pair_id = (order_->'orderId'->'clobPairId')::bigint;
 
         perpetual_market_record = dydx_get_perpetual_market_for_clob_pair(clob_pair_id);
@@ -48,7 +56,7 @@ BEGIN
                                                          perpetual_market_record."atomicResolution")::numeric);
         order_record."timeInForce" = dydx_from_protocol_time_in_force(order_->'timeInForce');
         order_record."reduceOnly" = (order_->>'reduceOnly')::boolean;
-        order_record."orderFlags" = (order_->'orderId'->'orderFlags')::bigint;
+        order_record."orderFlags" = order_flag;
         order_record."goodTilBlockTime" = to_timestamp((order_->'goodTilBlockTime')::double precision);
         order_record."clientMetadata" = (order_->'clientMetadata')::bigint;
         order_record."createdAtHeight" = block_height;
