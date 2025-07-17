@@ -1,7 +1,7 @@
 import { logger } from '@dydxprotocol-indexer/base';
 import { OrderTable } from '@dydxprotocol-indexer/postgres';
 import { VAULTS_CLOB_0_TO_999 } from '@dydxprotocol-indexer/postgres/build/src/lib/helpers';
-import { ORDER_FLAG_CONDITIONAL, ORDER_FLAG_LONG_TERM } from '@dydxprotocol-indexer/v4-proto-parser';
+import { ORDER_FLAG_CONDITIONAL, ORDER_FLAG_LONG_TERM, ORDER_FLAG_TWAP_SUBORDER } from '@dydxprotocol-indexer/v4-proto-parser';
 import {
   IndexerTendermintEvent,
   IndexerOrder,
@@ -196,9 +196,9 @@ export class StatefulOrderValidator extends Validator<StatefulOrderEventV1> {
 
     this.validateStatefulOrder(order);
 
-    if (order.orderId!.orderFlags !== ORDER_FLAG_LONG_TERM) {
+    if (order.orderId!.orderFlags !== ORDER_FLAG_LONG_TERM && order.orderId!.orderFlags !== ORDER_FLAG_TWAP_SUBORDER) {
       return this.logAndThrowParseMessageError(
-        `StatefulOrderEvent long term order must have order flag ${ORDER_FLAG_LONG_TERM}`,
+        `StatefulOrderEvent long term order must have order flag ${ORDER_FLAG_LONG_TERM} or ${ORDER_FLAG_TWAP_SUBORDER}`,
         { event: this.event },
       );
     }
