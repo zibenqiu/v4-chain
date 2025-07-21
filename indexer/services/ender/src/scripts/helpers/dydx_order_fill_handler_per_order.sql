@@ -112,24 +112,26 @@ BEGIN
     IF FOUND THEN
         order_record."status" = dydx_get_order_status(total_filled, order_record.size, order_canceled_status, order_record."orderFlags", order_record."timeInForce");
 
-        IF order_record."orderFlags" = 256 THEN
+        IF jsonb_extract_path(order_, 'orderId', 'orderFlags')::bigint = 256 THEN
+            order_record."totalFilled" = total_filled + fill_amount; 
             -- Twap suborders shouldn't update all the fields. For example, order flags should remain 128 (not updated to 256).
             UPDATE orders
             SET
                 "side" = order_record."side",
-                "totalFilled" = order_record."totalFilled",
                 "status" = order_record."status",
                 "reduceOnly" = order_record."reduceOnly",
                 "updatedAt" = order_record."updatedAt",
                 "updatedAtHeight" = order_record."updatedAtHeight",
-                "totalFilled" = order_record."totalFilled" + fill_amount -- keep track of fill amount for the parent order
+                "totalFilled" = order_record."totalFilled" -- keep track of fill amount for the parent order
             WHERE id = order_uuid;
         ELSE
+            order_record."totalFilled" = total_filled;
+
             UPDATE orders
             SET
                 "side" = order_record."side",
                 "size" = order_record."size",
-                "totalFilled" = total_filled;
+                "totalFilled" = total_filled,
                 "price" = order_record."price",
                 "status" = order_record."status",
                 "orderFlags" = order_record."orderFlags",
@@ -161,6 +163,10 @@ BEGIN
         order_record."duration" = NULL;
         order_record."interval" = NULL;
         order_record."priceTolerance" = NULL;
+
+        IF jsonb_extract_path(order_, 'orderId', 'orderFlags')::bigint = 256 THEN
+            order_record."orderFlags" = 128; -- Twap suborders should be mapped to their parent order.
+        END IF;
         
         INSERT INTO orders
             ("id", "subaccountId", "clientId", "clobPairId", "side", "size", "totalFilled", "price", "type",

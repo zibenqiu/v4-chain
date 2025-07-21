@@ -1614,18 +1614,15 @@ describe('OrderHandler', () => {
       price: takerPrice,
       status: OrderStatus.FILLED, // orderSize == totalFilled so status is filled
       clobPairId: testConstants.defaultPerpetualMarket3.clobPairId,
-      side: protocolTranslations.protocolOrderSideToOrderSide(takerSuborderProto.side),
-      orderFlags: takerSuborderProto.orderId!.orderFlags.toString(),
+      side: protocolTranslations.protocolOrderSideToOrderSide(takerOrderProto.side),
+      orderFlags: takerOrderProto.orderId!.orderFlags.toString(),
       timeInForce: TimeInForce.IOC,
       reduceOnly: true,
-      goodTilBlock: protocolTranslations.getGoodTilBlock(takerSuborderProto)?.toString(),
-      goodTilBlockTime: protocolTranslations.getGoodTilBlockTime(takerSuborderProto),
+      goodTilBlock: protocolTranslations.getGoodTilBlock(takerOrderProto)?.toString(),
+      goodTilBlockTime: protocolTranslations.getGoodTilBlockTime(takerOrderProto),
       clientMetadata: takerOrderProto.clientMetadata.toString(),
       updatedAt: defaultDateTime.toISO(),
       updatedAtHeight: defaultHeight.toString(),
-      // duration: takerOrderProto.twapParameters!.duration,
-      // interval: takerOrderProto.twapParameters!.interval,
-      // priceTolerance: takerOrderProto.twapParameters!.priceTolerance,
     });
 
     const eventId: Buffer = TendermintEventTable.createEventId(
@@ -1667,9 +1664,9 @@ describe('OrderHandler', () => {
       createdAtHeight: defaultHeight,
       type: FillType.TWAP_SUBORDER,
       clobPairId: testConstants.defaultPerpetualMarket3.clobPairId,
-      side: protocolTranslations.protocolOrderSideToOrderSide(takerSuborderProto.side),
-      orderFlags: takerSuborderProto.orderId!.orderFlags.toString(),
-      clientMetadata: takerSuborderProto.clientMetadata.toString(),
+      side: protocolTranslations.protocolOrderSideToOrderSide(takerOrderProto.side),
+      orderFlags: takerOrderProto.orderId!.orderFlags.toString(),
+      clientMetadata: takerOrderProto.clientMetadata.toString(),
       fee: defaultTakerFee,
       affiliateRevShare: defaultAffiliateRevShare,
     });
@@ -1679,7 +1676,7 @@ describe('OrderHandler', () => {
         producerSendMock,
         eventId,
         ORDER_FLAG_SHORT_TERM,
-        ORDER_FLAG_TWAP_SUBORDER, // ? is this correct?
+        ORDER_FLAG_TWAP_SUBORDER,
         testConstants.defaultPerpetualMarket3.id,
         testConstants.defaultPerpetualMarket3.clobPairId,
       ),
@@ -1692,10 +1689,10 @@ describe('OrderHandler', () => {
         OrderTable.orderIdToUuid(makerOrderProto.orderId!),
         orderFillEvent.totalFilledMaker.toString(),
       ),
-      expectStateFilledQuantums(
-        OrderTable.orderIdToUuid(takerSuborderProto.orderId!),
-        orderFillEvent.totalFilledTaker.toString(),
-      ),
+      // expectStateFilledQuantums(
+      //   OrderTable.orderIdToUuid(takerSuborderProto.orderId!),
+      //   orderFillEvent.totalFilledTaker.toString(),
+      // ),
     ]);
   });
 

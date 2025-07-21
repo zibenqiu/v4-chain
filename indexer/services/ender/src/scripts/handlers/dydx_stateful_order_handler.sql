@@ -28,10 +28,10 @@ BEGIN
         order_ = coalesce(event_data->'orderPlace'->'order', event_data->'longTermOrderPlacement'->'order', event_data->'conditionalOrderPlacement'->'order', event_data->'twapOrderPlacement'->'order');
         order_flag = (order_->'orderId'->'orderFlags')::bigint;
 
-        IF order_flag = 256 THEN
-            -- Twap suborders are not stored in the orders table.
-            RETURN NULL;
-        END IF;
+        -- IF order_flag = 256 THEN
+        --     -- Twap suborders are not stored in the orders table.
+        --     RETURN NULL;
+        -- END IF;
 
         clob_pair_id = (order_->'orderId'->'clobPairId')::bigint;
 
